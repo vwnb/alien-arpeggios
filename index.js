@@ -6,8 +6,8 @@ if (process.env.NODE_ENV !== 'production') {
  * Configuration
  */
 const bus = 'IAC Driver Bus 1';
-const lowerNote = 24;
-const upperNote = 72;
+const lowerNote = 36;
+const upperNote = 48;
 
 const easymidi = require('easymidi');
 
@@ -37,7 +37,7 @@ const playNote = (note) => {
 }
 
 /**
- * Clock block
+ * Functions
  */
 var counter = 0;
  
@@ -49,13 +49,38 @@ var tanOscillator = (speed = 1, depth = 1) => {
   return Math.tan(counter * speed) * depth
 }
 
-setInterval(() => {
+/**
+ * Simple arpeggios using the lower limit as target note
+ */
+var simpleArpeggios = () => {
+  setInterval(() => {
 
+    playNote(lowerNote + tanOscillator(0.2, 5));
+    
+    counter++;
+  
+  }, 100);
+}
+
+/**
+ * Dodecaphonic arpeggios
+ */
+var dodecaphony = () => {
   let note = Math.floor(Math.random() * upperNote) + lowerNote
 
-  // playNote(upperNote + sinOscillator(0.7, 10));
-  playNote(upperNote + tanOscillator(0.2, 5));
-  
-  counter++;
+  setInterval(() => {
 
-}, 100);
+    if (counter % 100 === 0) {
+      note = Math.floor(Math.random() * upperNote) + lowerNote
+    }
+
+    playNote(note + tanOscillator(0.2, 5));
+    
+    counter++;
+  
+  }, 100);
+}
+
+// simpleArpeggios();
+
+dodecaphony();
