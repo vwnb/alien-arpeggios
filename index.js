@@ -70,7 +70,7 @@ var dodecaphony = () => {
 
   setInterval(() => {
 
-    if (counter % 100 === 0) {
+    if (counter % 10 === 0) {
       note = Math.floor(Math.random() * upperNote) + lowerNote
     }
 
@@ -81,6 +81,5 @@ var dodecaphony = () => {
   }, 100);
 }
 
-// simpleArpeggios();
-
-dodecaphony();
+// Test dodecaphony starting from next full second
+setTimeout(dodecaphony, Math.ceil(Date.now() / 1000) - Date.now());
