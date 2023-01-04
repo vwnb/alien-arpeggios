@@ -11,9 +11,14 @@ const upperNote = 72;
 
 const easymidi = require('easymidi');
 
-const output = new easymidi.Output(bus);
+if (easymidi.getOutputs().includes(bus)) {
+  console.log(easymidi.getOutputs());
+} else {
+  console.log('MIDI bus ' + bus + ' not available');
+  process.exit();
+}
 
-console.log(easymidi.getOutputs());
+const output = new easymidi.Output(bus);
 
 const playNote = (note) => {
   output.send('noteon', {
