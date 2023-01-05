@@ -22,14 +22,14 @@ const output = new easymidi.Output(bus);
 
 const playNote = (note) => {
   output.send('noteon', {
-    note: note,
+    note: Math.floor(note),
     velocity: 127,
     channel: 3
   });
 
   setTimeout(() => {
     output.send('noteoff', {
-        note: note,
+        note: Math.floor(note),
         velocity: 127,
         channel: 3
       });
@@ -66,12 +66,12 @@ var simpleArpeggios = () => {
  * Dodecaphonic arpeggios
  */
 var dodecaphony = () => {
-  let note = Math.floor(Math.random() * upperNote) + lowerNote
+  let note = Math.random() * upperNote + lowerNote
 
   setInterval(() => {
 
     if (counter % 10 === 0) {
-      note = Math.floor(Math.random() * upperNote) + lowerNote
+      note = Math.random() * upperNote + lowerNote
     }
 
     playNote(note + tanOscillator(0.2, 5));
@@ -81,5 +81,4 @@ var dodecaphony = () => {
   }, 100);
 }
 
-// Test dodecaphony starting from next full second
-setTimeout(dodecaphony, Math.ceil(Date.now() / 1000) - Date.now());
+simpleArpeggios();
