@@ -9,7 +9,7 @@ const easymidi = require('easymidi');
  */
 const bus = 'IAC Driver Bus 1';
 const lowerNote = 36;
-const upperNote = 48;
+const upperNote = 72;
 
 if (easymidi.getOutputs().includes(bus)) {
   console.log(easymidi.getOutputs());
@@ -48,6 +48,8 @@ const playNote = (note) => {
  *
  * @param {number} speed - wave period
  * @param {number} depth - wave amplitude
+ *
+ * @return {number}
  */
 const sinOscillator = (speed = 1, depth = 1) => {
   return Math.sin(counter * speed) * depth
@@ -58,6 +60,8 @@ const sinOscillator = (speed = 1, depth = 1) => {
  *
  * @param {number} speed - wave period
  * @param {number} depth - wave amplitude
+ *
+ * @return {number}
  */
 const tanOscillator = (speed = 1, depth = 1) => {
   return Math.tan(counter * speed) * depth
@@ -68,9 +72,11 @@ const tanOscillator = (speed = 1, depth = 1) => {
  * 
  * @param {number} speed - wave period
  * @param {number} depth - wave amplitude
+ * 
+ * @return {function}
  */
-const simpleArpeggios = (speed = 1, depth = 1) => {
-  setInterval(() => {
+const simpleArpeggios = (speed = 1, depth = 1, targetNote = lowerNote) => {
+  return setInterval(() => {
 
     playNote(lowerNote + tanOscillator(speed, depth));
     
@@ -80,25 +86,32 @@ const simpleArpeggios = (speed = 1, depth = 1) => {
 }
 
 /**
- * Dodecaphonic arpeggios
- * 
- * @param {number} speed - wave period
- * @param {number} depth - wave amplitude
+ * Play function for duration
+ *
+ * @param {number} speed 
+ * @param {number} depth 
+ * @param {number} targetNote - MIDI note from 0 to 127
+ * @param {number} duration - in milliseconds
+ * @param {function} callback - simpleArpeggios or the like
  */
-const dodecaphony = (speed = 1, depth = 1) => {
-  let note = Math.random() * upperNote + lowerNote
+const playFor = (speed, depth, targetNote, duration = 1000, callback = () => {}) => {
+  let callbackFunction = callback(speed, depth, targetNote);
 
-  setInterval(() => {
+  setTimeout(() => {
 
-    if (counter % 10 === 0) {
-      note = Math.random() * upperNote + lowerNote
-    }
-
-    playNote(note + tanOscillator(speed, depth));
-    
-    counter++;
+    clearInterval(callbackFunction);
   
-  }, 100);
+  }, duration);
 }
 
-simpleArpeggios(0.2, 5);
+/**
+ * Creative block
+ */
+setInterval(() => {
+
+  let targetNote = Math.floor(Math.random() * upperNote + lowerNote);
+  console.log("Setting target note to "+targetNote);
+
+  playFor(0.2, 3, targetNote, 3000, simpleArpeggios);
+
+}, 3000)
