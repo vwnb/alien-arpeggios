@@ -2,14 +2,14 @@ if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
 }
 
+const easymidi = require('easymidi');
+
 /**
  * Configuration
  */
 const bus = 'IAC Driver Bus 1';
 const lowerNote = 36;
 const upperNote = 48;
-
-const easymidi = require('easymidi');
 
 if (easymidi.getOutputs().includes(bus)) {
   console.log(easymidi.getOutputs());
@@ -20,6 +20,13 @@ if (easymidi.getOutputs().includes(bus)) {
 
 const output = new easymidi.Output(bus);
 
+var counter  = 0;
+
+/**
+ * Note player
+ *
+ * @param {number} note - MIDI note from 0 to 127
+ */
 const playNote = (note) => {
   output.send('noteon', {
     note: Math.floor(note),
@@ -35,27 +42,37 @@ const playNote = (note) => {
       });
   }, 50);
 }
-
-/**
- * Functions
- */
-var counter = 0;
  
-var sinOscillator = (speed = 1, depth = 1) => {
+/**
+ * Sine wave oscillator
+ *
+ * @param {number} speed - wave period
+ * @param {number} depth - wave amplitude
+ */
+const sinOscillator = (speed = 1, depth = 1) => {
   return Math.sin(counter * speed) * depth
 }
 
-var tanOscillator = (speed = 1, depth = 1) => {
+/**
+ * Tangent wave oscillator
+ *
+ * @param {number} speed - wave period
+ * @param {number} depth - wave amplitude
+ */
+const tanOscillator = (speed = 1, depth = 1) => {
   return Math.tan(counter * speed) * depth
 }
 
 /**
  * Simple arpeggios using the lower limit as target note
+ * 
+ * @param {number} speed - wave period
+ * @param {number} depth - wave amplitude
  */
-var simpleArpeggios = () => {
+const simpleArpeggios = (speed = 1, depth = 1) => {
   setInterval(() => {
 
-    playNote(lowerNote + tanOscillator(0.2, 5));
+    playNote(lowerNote + tanOscillator(speed, depth));
     
     counter++;
   
@@ -64,8 +81,11 @@ var simpleArpeggios = () => {
 
 /**
  * Dodecaphonic arpeggios
+ * 
+ * @param {number} speed - wave period
+ * @param {number} depth - wave amplitude
  */
-var dodecaphony = () => {
+const dodecaphony = (speed = 1, depth = 1) => {
   let note = Math.random() * upperNote + lowerNote
 
   setInterval(() => {
@@ -74,11 +94,11 @@ var dodecaphony = () => {
       note = Math.random() * upperNote + lowerNote
     }
 
-    playNote(note + tanOscillator(0.2, 5));
+    playNote(note + tanOscillator(speed, depth));
     
     counter++;
   
   }, 100);
 }
 
-simpleArpeggios();
+simpleArpeggios(0.2, 5);
