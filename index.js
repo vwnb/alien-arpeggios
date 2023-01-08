@@ -16,10 +16,14 @@ class AlienArpeggiosConfiguration
     this.upperNote = 72;
     
     if (easymidi.getOutputs().includes(this.bus)) {
-      console.log(easymidi.getOutputs());
+      console.log('Bus connected: '+ this.bus);
+    } else if(easymidi.getOutputs().length === 0) {
+      console.log('No MIDI buses available. If you have a computer, you can turn one on somehow.');
+      process.exit(1);
     } else {
-      console.log('MIDI bus ' + this.bus + ' not available');
-      process.exit();
+      console.log('MIDI bus ' + this.bus + ' not available. Try one of the following.');
+      console.log(easymidi.getOutputs());
+      process.exit(1);
     }
     
     this.output = new easymidi.Output(this.bus);
