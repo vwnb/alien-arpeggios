@@ -144,7 +144,7 @@ class AlienArpeggios
 let player   = new AlienArpeggios();
 let interval = 3000;
 
-console.log("Playing something every " + interval + "milliseconds");
+console.log("Playing something every " + interval + " milliseconds");
 
 setInterval(() =>
 {
