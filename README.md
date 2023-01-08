@@ -32,12 +32,14 @@ console.log("Playing something every " + interval + " milliseconds");
 setInterval(() =>
 {
   let targetNote = Math.floor(
-    Math.random() * player.configuration.upperNote + player.configuration.lowerNote
+    Math.random() * player.configuration.lowerNote + (
+      player.configuration.upperNote - player.configuration.lowerNote
+    )
   );
 
   console.log("Setting target note to " + targetNote);
 
-  player.playFor(0.2, 3, targetNote, 3000, player.simpleArpeggios);
+  player.playFor(0.2, 3, targetNote, 3000, player.helper.tanOscillator, player.simpleArpeggios);
 
 }, interval)
 ```
@@ -45,5 +47,5 @@ setInterval(() =>
 Or simply:
 ```javascript
 let player = new AlienArpeggios();
-player.playFor(0.2, 3, 48, 3000, player.simpleArpeggios);
+player.playFor(0.2, 3, 48, 3000);
 ```

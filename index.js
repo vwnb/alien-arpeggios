@@ -104,12 +104,17 @@ class AlienArpeggios
    * 
    * @return {function}
    */
-  simpleArpeggios = (speed = 1, depth = 1, targetNote = lowerNote) =>
+  simpleArpeggios = (
+    speed = 1,
+    depth = 1,
+    targetNote = this.configuration.lowerNote,
+    trigonometricFunction = this.helper.tanOscillator
+  ) =>
   {
     return setInterval(() => {
 
       this.helper.playNote(
-        this.configuration.lowerNote + this.helper.tanOscillator(speed, depth)
+        targetNote + trigonometricFunction(speed, depth)
       );
       
       this.helper.counter++;
@@ -124,11 +129,19 @@ class AlienArpeggios
    * @param {number} depth 
    * @param {number} targetNote - MIDI note from 0 to 127
    * @param {number} duration - in milliseconds
+   * @param {function} trigonometricFunction - sinOscillator or the like
    * @param {function} callback - simpleArpeggios or the like
    */
-  playFor = (speed, depth, targetNote, duration = 1000, callback = () => {}) =>
+  playFor = (
+    speed = 1,
+    depth = 1,
+    targetNote = 48,
+    duration = 1000,
+    trigonometricFunction = this.helper.sinOscillator,
+    callback = this.simpleArpeggios
+  ) =>
   {
-    let callbackFunction = callback(speed, depth, targetNote);
+    let callbackFunction = callback(speed, depth, targetNote, trigonometricFunction);
 
     setTimeout(() => {
 
@@ -149,11 +162,13 @@ console.log("Playing something every " + interval + " milliseconds");
 setInterval(() =>
 {
   let targetNote = Math.floor(
-    Math.random() * player.configuration.upperNote + player.configuration.lowerNote
+    Math.random() * player.configuration.lowerNote + (
+      player.configuration.upperNote - player.configuration.lowerNote
+    )
   );
 
   console.log("Setting target note to " + targetNote);
 
-  player.playFor(0.2, 3, targetNote, 3000, player.simpleArpeggios);
+  player.playFor(0.2, 3, targetNote, 3000, player.helper.tanOscillator, player.simpleArpeggios);
 
 }, interval)
