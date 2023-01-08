@@ -12,7 +12,7 @@ node index.js
 ```
 
 After setup, the MIDI output bus must be configured. On MacOS there is usually something like:
-```
+```javascript
 AlienArpeggiosConfiguration
 {
     constructor()
@@ -23,11 +23,11 @@ AlienArpeggiosConfiguration
 It will make noise when a DAW like GarageBand is open.
 
 The creative part of the code can look like this:
-```
+```javascript
 let player   = new AlienArpeggios();
 let interval = 3000;
 
-console.log("Playing something every " + interval + "milliseconds");
+console.log("Playing something every " + interval + " milliseconds");
 
 setInterval(() =>
 {
@@ -43,7 +43,7 @@ setInterval(() =>
 ```
 
 Or simply:
-```
+```javascript
 let player = new AlienArpeggios();
 player.playFor(0.2, 3, 48, 3000, player.simpleArpeggios);
 ```
